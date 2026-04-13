@@ -6,26 +6,25 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
-    /**
-     * Run the migrations.
-     */
     public function up(): void
     {
         Schema::create('users', function (Blueprint $table) {
             $table->id();
             $table->string('name');
-            // Sustitución de email por codigo_cliente como identificador único
-            $table->string('codigo_cliente')->unique()->index(); 
+            // Legajo: Identificador numérico único para inicio de sesión
+            $table->integer('legajo')->unique()->index(); 
             $table->string('password');
-            // Definición de roles para control de acceso
-            $table->enum('role', ['admin', 'invitado'])->default('invitado');
+            // Territorio: Campo numérico para el silo ECO
+            $table->integer('territorio')->nullable()->index();
+            // Roles purificados: solo personal interno
+            $table->enum('role', ['admin', 'eco'])->default('eco');
             $table->rememberToken();
             $table->timestamps();
         });
 
-        // Ajuste de tabla de reseteo para usar el código en lugar de email
         Schema::create('password_reset_tokens', function (Blueprint $table) {
-            $table->string('codigo_cliente')->primary();
+            // El reseteo ahora también se vincula al legajo
+            $table->integer('legajo')->primary();
             $table->string('token');
             $table->timestamp('created_at')->nullable();
         });
@@ -40,9 +39,6 @@ return new class extends Migration
         });
     }
 
-    /**
-     * Reverse the migrations.
-     */
     public function down(): void
     {
         Schema::dropIfExists('users');

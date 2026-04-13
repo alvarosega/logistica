@@ -19,7 +19,7 @@ class LoginRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'codigo_cliente' => ['required', 'string'],
+            'legajo' => ['required', 'integer'], // antes era 'email'
             'password' => ['required', 'string'],
         ];
     }
@@ -28,11 +28,11 @@ class LoginRequest extends FormRequest
     {
         $this->ensureIsNotRateLimited();
 
-        if (! Auth::attempt($this->only('codigo_cliente', 'password'), $this->boolean('remember'))) {
+        if (! Auth::attempt($this->only('legajo', 'password'), $this->boolean('remember'))) {
             RateLimiter::hit($this->throttleKey());
 
             throw ValidationException::withMessages([
-                'codigo_cliente' => trans('auth.failed'),
+                'legajo' => trans('auth.failed'),
             ]);
         }
 
@@ -50,7 +50,7 @@ class LoginRequest extends FormRequest
         $seconds = RateLimiter::availableIn($this->throttleKey());
 
         throw ValidationException::withMessages([
-            'codigo_cliente' => trans('auth.throttle', [
+            'legajo' => trans('auth.throttle', [
                 'seconds' => $seconds,
                 'minutes' => ceil($seconds / 60),
             ]),
@@ -59,6 +59,6 @@ class LoginRequest extends FormRequest
 
     public function throttleKey(): string
     {
-        return Str::transliterate(Str::lower($this->string('codigo_cliente')).'|'.$this->ip());
+        return Str::transliterate(Str::lower($this->string('legajo')).'|'.$this->ip());
     }
 }

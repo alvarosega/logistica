@@ -13,9 +13,10 @@ class User extends Authenticatable
 
     protected $fillable = [
         'name',
-        'codigo_cliente', 
+        'legajo', 
         'password',
         'role',
+        'territorio',
     ];
 
     protected $hidden = [
@@ -26,14 +27,18 @@ class User extends Authenticatable
     protected function casts(): array
     {
         return [
-            // Eliminamos email_verified_at
             'password' => 'hashed',
         ];
     }
-    // app/Models/User.php
 
-    public function orders(): HasMany
+    /**
+     * Relación con pedidos. 
+     * Tanto el silo ECO como CLIENTE utilizarán esta relación.
+     */
+    public function orders(): \Illuminate\Database\Eloquent\Relations\HasMany
     {
-        return $this->hasMany(Order::class, 'codigo_cliente', 'codigo_cliente');
+        // foreignKey en Order: territorio
+        // localKey en User: territorio
+        return $this->hasMany(Order::class, 'territorio', 'territorio');
     }
 }

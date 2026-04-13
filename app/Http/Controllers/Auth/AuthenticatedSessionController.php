@@ -7,7 +7,6 @@ use App\Http\Requests\Auth\LoginRequest;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 use Inertia\Response;
 
@@ -19,26 +18,23 @@ class AuthenticatedSessionController extends Controller
             'status' => session('status'),
         ]);
     }
+
     public function store(LoginRequest $request): RedirectResponse
     {
         $request->authenticate();
         $request->session()->regenerate();
-    
-        // Redirección basada en rol
-        $url = $request->user()->role === 'admin' ? '/admin/dashboard' : '/invitado/dashboard';
-    
+
+        // Redirección calculada
+        $user = $request->user();
+        $url = $user->role === 'admin' ? '/admin/dashboard' : '/eco/';
+
         return redirect()->intended($url);
     }
 
-    /**
-     * Destroy an authenticated session.
-     */
     public function destroy(Request $request): RedirectResponse
     {
         Auth::guard('web')->logout();
-
         $request->session()->invalidate();
-
         $request->session()->regenerateToken();
 
         return redirect('/');

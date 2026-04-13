@@ -1,57 +1,34 @@
 <script setup>
-import { ref } from 'vue';
-import ApplicationLogo from '@/Components/ApplicationLogo.vue';
-import Dropdown from '@/Components/Dropdown.vue';
-import DropdownLink from '@/Components/DropdownLink.vue';
-import NavLink from '@/Components/NavLink.vue';
 import { Link } from '@inertiajs/vue3';
+import { ref } from 'vue';
 
-const showingNavigationDropdown = ref(false);
+const isSidebarOpen = ref(true);
 </script>
 
 <template>
-    <div class="min-h-screen bg-slate-50">
-        <nav class="border-b border-indigo-100 bg-white shadow-sm">
-            <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-                <div class="flex h-16 justify-between">
-                    <div class="flex">
-                        <div class="flex shrink-0 items-center font-bold text-indigo-600">
-                            PANEL ADMIN
-                        </div>
-                        <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
-                            <NavLink :href="route('admin.dashboard')" :active="route().current('admin.dashboard')">
-                                Gestión de Pedidos
-                            </NavLink>
-                            </div>
-                    </div>
-
-                    <div class="hidden sm:ms-6 sm:flex sm:items-center">
-                        <div class="relative ms-3">
-                            <Dropdown align="right" width="48">
-                                <template #trigger>
-                                    <button type="button" class="inline-flex items-center rounded-md border border-transparent bg-white px-3 py-2 text-sm font-medium leading-4 text-gray-500 transition hover:text-gray-700 focus:outline-none">
-                                        {{ $page.props.auth.user.name }} (Admin)
-                                    </button>
-                                </template>
-                                <template #content>
-                                    <DropdownLink :href="route('profile.edit')">Perfil</DropdownLink>
-                                    <DropdownLink :href="route('logout')" method="post" as="button">Cerrar Sesión</DropdownLink>
-                                </template>
-                            </Dropdown>
-                        </div>
-                    </div>
-                </div>
+    <div class="min-h-screen bg-gray-900 text-gray-100 flex font-sans">
+        <aside :class="isSidebarOpen ? 'w-64' : 'w-20'" class="bg-black border-r border-cyan-900/30 transition-all duration-300">
+            <div class="p-6 font-mono font-bold text-cyan-500 tracking-tighter">
+                {{ isSidebarOpen ? 'VAYU_ADMIN' : 'V_A' }}
             </div>
-        </nav>
-
-        <header class="bg-white shadow" v-if="$slots.header">
-            <div class="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
-                <slot name="header" />
+            <nav class="mt-10 space-y-2 px-4 font-mono text-sm uppercase">
+                <Link :href="route('admin.dashboard')" class="block py-2 px-4 hover:bg-cyan-900/20 hover:text-cyan-400 rounded transition">Dashboard</Link>
+                </nav>
+            <div class="absolute bottom-10 px-4 w-full">
+                <Link :href="route('logout')" method="post" as="button" class="text-xs text-red-500 hover:text-red-400 uppercase font-mono italic">Disconnect_</Link>
             </div>
-        </header>
+        </aside>
 
-        <main>
-            <slot />
+        <main class="flex-1 flex flex-col">
+            <header class="h-16 border-b border-cyan-900/20 flex items-center px-8 justify-between bg-black/50 backdrop-blur-md">
+                <button @click="isSidebarOpen = !isSidebarOpen" class="text-cyan-500">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h16" /></svg>
+                </button>
+                <div class="text-xs font-mono text-cyan-800">SYSTEM_STATUS: <span class="text-green-500 italic">OPTIMAL</span></div>
+            </header>
+            <section class="p-8">
+                <slot />
+            </section>
         </main>
     </div>
 </template>

@@ -1,18 +1,18 @@
 <script setup>
 import Checkbox from '@/Components/Checkbox.vue';
-import InvitadoLayout from '@/Layouts/InvitadoLayout.vue';
 import InputError from '@/Components/InputError.vue';
 import InputLabel from '@/Components/InputLabel.vue';
 import PrimaryButton from '@/Components/PrimaryButton.vue';
 import TextInput from '@/Components/TextInput.vue';
 import { Head, useForm } from '@inertiajs/vue3';
 
+// Nota: No usamos un Layout aquí para que la pantalla de login sea limpia
 defineProps({
     status: { type: String },
 });
 
 const form = useForm({
-    codigo_cliente: '',
+    legajo: '', // Identificador numérico
     password: '',
     remember: false,
 });
@@ -25,26 +25,28 @@ const submit = () => {
 </script>
 
 <template>
-    <InvitadoLayout>
-        <Head title="Iniciar Sesión" />
+    <div class="min-h-screen flex flex-col sm:justify-center items-center pt-6 sm:pt-0 bg-gray-100">
+        <Head title="Acceso al Sistema" />
 
-        <div class="mx-auto max-w-md mt-10 p-6 bg-white shadow-md rounded-lg">
-            <div v-if="status" class="mb-4 text-sm font-medium text-green-600">
+        <div class="w-full sm:max-w-md mt-6 px-6 py-4 bg-white shadow-md overflow-hidden sm:rounded-lg">
+            <h2 class="text-center text-xl font-bold text-gray-700 mb-6">Logística Vayu - Interno</h2>
+
+            <div v-if="status" class="mb-4 font-medium text-sm text-green-600">
                 {{ status }}
             </div>
 
             <form @submit.prevent="submit">
                 <div>
-                    <InputLabel for="codigo_cliente" value="Código de Cliente" />
+                    <InputLabel for="legajo" value="Número de Legajo" />
                     <TextInput
-                        id="codigo_cliente"
-                        type="text"
+                        id="legajo"
+                        type="number"
                         class="mt-1 block w-full"
-                        v-model="form.codigo_cliente"
+                        v-model="form.legajo"
                         required
                         autofocus
                     />
-                    <InputError class="mt-2" :message="form.errors.codigo_cliente" />
+                    <InputError class="mt-2" :message="form.errors.legajo" />
                 </div>
 
                 <div class="mt-4">
@@ -59,23 +61,19 @@ const submit = () => {
                     <InputError class="mt-2" :message="form.errors.password" />
                 </div>
 
-                <div class="mt-4 block">
+                <div class="block mt-4">
                     <label class="flex items-center">
                         <Checkbox name="remember" v-model:checked="form.remember" />
-                        <span class="ms-2 text-sm text-gray-600">Recordarme</span>
+                        <span class="ms-2 text-sm text-gray-600">Recordar sesión</span>
                     </label>
                 </div>
 
-                <div class="mt-6 flex items-center justify-center">
-                    <PrimaryButton
-                        class="w-full justify-center"
-                        :class="{ 'opacity-25': form.processing }"
-                        :disabled="form.processing"
-                    >
-                        Entrar al Sistema
+                <div class="flex items-center justify-end mt-6">
+                    <PrimaryButton class="w-full justify-center" :class="{ 'opacity-25': form.processing }" :disabled="form.processing">
+                        Ingresar
                     </PrimaryButton>
                 </div>
             </form>
         </div>
-    </InvitadoLayout>
+    </div>
 </template>
