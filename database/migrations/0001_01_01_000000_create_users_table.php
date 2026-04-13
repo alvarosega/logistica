@@ -14,15 +14,18 @@ return new class extends Migration
         Schema::create('users', function (Blueprint $table) {
             $table->id();
             $table->string('name');
-            $table->string('email')->unique();
-            $table->timestamp('email_verified_at')->nullable();
+            // Sustitución de email por codigo_cliente como identificador único
+            $table->string('codigo_cliente')->unique()->index(); 
             $table->string('password');
+            // Definición de roles para control de acceso
+            $table->enum('role', ['admin', 'invitado'])->default('invitado');
             $table->rememberToken();
             $table->timestamps();
         });
 
+        // Ajuste de tabla de reseteo para usar el código en lugar de email
         Schema::create('password_reset_tokens', function (Blueprint $table) {
-            $table->string('email')->primary();
+            $table->string('codigo_cliente')->primary();
             $table->string('token');
             $table->timestamp('created_at')->nullable();
         });
