@@ -40,48 +40,23 @@ const telLink = (number) => `tel:${number?.toString().replace(/\s/g, '')}`;
                     
                     <div class="overflow-x-auto">
                         <table class="min-w-full divide-y divide-gray-200 border-collapse">
-                            <thead class="bg-gray-50">
+                            <thead>
                                 <tr>
                                     <th class="px-4 py-3 text-left text-xs font-mono font-bold text-gray-500 uppercase tracking-tighter">Fecha</th>
                                     <th class="px-4 py-3 text-left text-xs font-mono font-bold text-gray-500 uppercase tracking-tighter">Cliente_Cod</th>
+                                    <th class="px-4 py-3 text-left text-xs font-mono font-bold text-gray-500 uppercase tracking-tighter">Razón Social</th>
                                     <th class="px-4 py-3 text-left text-xs font-mono font-bold text-gray-500 uppercase tracking-tighter">Producto</th>
                                     <th class="px-4 py-3 text-right text-xs font-mono font-bold text-gray-500 uppercase tracking-tighter">Cant.</th>
-                                    <th class="px-4 py-3 text-left text-xs font-mono font-bold text-gray-500 uppercase tracking-tighter">Camión_ID</th>
-                                    <th class="px-4 py-3 text-left text-xs font-mono font-bold text-gray-500 uppercase tracking-tighter">Encargado / Contacto</th>
-                                </tr>
+                                    </tr>
                             </thead>
-                            <tbody class="bg-white divide-y divide-gray-100 font-mono">
-                                <tr v-for="order in orders.data" :key="order.id" class="hover:bg-cyan-50/50 transition-colors group">
-                                    <td class="px-4 py-3 whitespace-nowrap text-xs text-gray-600">
-                                        {{ formatDate(order.fecha_entrega) }}
-                                    </td>
-                                    <td class="px-4 py-3 whitespace-nowrap text-sm font-bold text-gray-900 group-hover:text-cyan-700">
-                                        {{ order.codigo_cliente }}
-                                    </td>
-                                    <td class="px-4 py-3 text-xs text-gray-600 truncate max-w-[200px]">
-                                        {{ order.producto }}
-                                    </td>
-                                    <td class="px-4 py-3 whitespace-nowrap text-sm text-right font-bold text-gray-900">
-                                        {{ order.cantidad }}
-                                    </td>
-                                    <td class="px-4 py-3 whitespace-nowrap text-xs text-indigo-600 font-bold uppercase">
-                                        {{ order.codigo_camion }}
-                                    </td>
-                                    <td class="px-4 py-3 whitespace-nowrap text-xs">
-                                        <div v-if="order.truck" class="flex flex-col">
-                                            <span class="text-gray-900 font-semibold">{{ order.truck.nombre }}</span>
-                                            <a :href="telLink(order.truck.cel)" class="text-cyan-600 hover:underline decoration-cyan-300">
-                                                {{ order.truck.cel }}
-                                            </a>
-                                        </div>
-                                        <span v-else class="text-gray-400 italic">No asignado</span>
-                                    </td>
-                                </tr>
-                                <tr v-if="orders.data.length === 0">
-                                    <td colspan="6" class="px-4 py-10 text-center text-gray-500 italic font-mono">
-                                        NO_DATA_AVAILABLE_FOR_TERRITORY_{{ user_territorio }}
-                                    </td>
-                                </tr>
+                            <tbody>
+                                <tr v-for="order in orders.data" :key="order.id">
+                                    <td class="px-4 py-3 text-xs text-gray-600">{{ formatDate(order.fecha_entrega) }}</td>
+                                    <td class="px-4 py-3 text-sm font-bold text-gray-900">{{ order.codigo_cliente }}</td>
+                                    <td class="px-4 py-3 text-xs text-gray-900 font-bold uppercase">{{ order.razon_social }}</td>
+                                    <td class="px-4 py-3 text-xs text-gray-600 truncate max-w-[150px]">{{ order.producto }}</td>
+                                    <td class="px-4 py-3 text-sm text-right font-bold text-gray-900">{{ order.cantidad }}</td>
+                                    </tr>
                             </tbody>
                         </table>
                     </div>

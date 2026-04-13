@@ -30,7 +30,7 @@ const formatDate = (dateString) => {
 
     <div class="min-h-screen bg-gray-50 flex flex-col items-center py-12 px-4">
         <div class="mb-10 text-center">
-            <h1 class="text-3xl font-extrabold text-gray-900 tracking-tight">LOGÍSTICA VAYU</h1>
+            <h1 class="text-3xl font-extrabold text-gray-900 tracking-tight">LOGÍSTICA</h1>
             <p class="text-gray-500 mt-2">Consulta el estado de tus entregas en tiempo real.</p>
         </div>
 

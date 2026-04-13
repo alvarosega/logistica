@@ -12,11 +12,12 @@ class Order extends Model
 
     protected $fillable = [
         'codigo_cliente',
-        'territorio',
+        'razon_social', // Añadido
+        'territorio',   // Añadido
         'codigo_camion',
         'fecha_entrega',
         'producto',
-        'cantidad'
+        'cantidad',
     ];
 
     public function user(): BelongsTo
@@ -28,6 +29,8 @@ class Order extends Model
      */
     public function truck(): \Illuminate\Database\Eloquent\Relations\BelongsTo
     {
+        // foreignKey en 'orders': codigo_camion
+        // ownerKey en 'trucks': codigo_camion
         return $this->belongsTo(Truck::class, 'codigo_camion', 'codigo_camion');
     }
 }   

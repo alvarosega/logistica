@@ -15,34 +15,34 @@ class OrderSeeder extends Seeder
         if (!file_exists($file)) return;
 
         $handle = fopen($file, "r");
-        fgetcsv($handle, 0, ","); // Saltar cabecera usando coma
+        fgetcsv($handle, 0, ","); // Saltar cabecera
 
         $batch = [];
         DB::beginTransaction();
 
         try {
             while (($data = fgetcsv($handle, 0, ",")) !== FALSE) {
-                // Validación básica: omitir si falta el código de cliente
                 if (empty($data[0])) continue;
 
-                // Lógica de fecha: soporta número de serie Excel (46100) o formato DD/MM/YYYY
-                $fechaRaw = trim($data[2]);
+                // CORRECCIÓN: La fecha ahora está en el índice 3
+                $fechaRaw = trim($data[3]); 
+                
                 $fechaFinal = is_numeric($fechaRaw) 
                     ? Carbon::create(1899, 12, 30)->addDays((int)$fechaRaw)->format('Y-m-d')
                     : Carbon::createFromFormat('d/m/Y', $fechaRaw)->format('Y-m-d');
 
                 $batch[] = [
                     'codigo_cliente' => trim($data[0]),
-                    'codigo_camion'  => trim($data[1]),
-                    'fecha_entrega'  => $fechaFinal,
-                    'producto'       => trim($data[3]),
-                    'cantidad'       => (int)$data[4],
-                    'territorio'     => (int)$data[5], // Nueva columna
+                    'razon_social'   => trim($data[1]),
+                    'codigo_camion'  => trim($data[2]), // Índice 2 es el camión (TM9)
+                    'fecha_entrega'  => $fechaFinal,    // El valor procesado de $data[3]
+                    'producto'       => trim($data[4]),
+                    'cantidad'       => (int)$data[5],
+                    'territorio'     => (int)$data[6],
                     'created_at'     => now(),
                     'updated_at'     => now(),
                 ];
 
-                // Inserción en bloques de 1000 para eficiencia en los 3,000 registros diarios
                 if (count($batch) >= 1000) {
                     Order::insert($batch);
                     $batch = [];
